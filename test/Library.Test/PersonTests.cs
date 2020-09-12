@@ -8,56 +8,100 @@ namespace Tests
 {
     public class Tests
     {
+
+        private Person persona;
+
+        private Person persona_nombre_vacio;
+
+        private Person persona_cedula_vacio;
+
+        private Person persona_vacio;
+
+        private Person persona_nombre_null;
+
+        private Person persona_cedula_null;
+
+        private Person persona_null;
+
         [SetUp]
         public void Setup()
         {
-            // Insertá tu código de inicialización aquí
+            persona = new Person("John Doe", "1.234.567-8");
+            persona_nombre_vacio = new Person("", "1.234.567-8");
+            persona_cedula_vacio = new Person("John Doe", "");
+            persona_vacio = new Person("", "");
+            persona_nombre_null = new Person(null, "1.234.567-8");
+            persona_cedula_null = new Person("John Doe", null);
+            persona_null = new Person(null, null);
         }
 
         [Test]
-        public bool Test_IdIsValid(string id)
+        public void Test_Isvalid_True()
         {
-            long tempOut;
+            bool result = IdUtils.IdIsValid("1.234.567-8");
+            Assert.AreEqual(true, result);
+        }
 
-            // Quitar puntos y guiones
-            id = id.Replace(".", "");
-            id = id.Replace("-", "");
+        public void Test_Isvalid_Sin_Puntos()
+        {
+            bool result = IdUtils.IdIsValid("12345678");
+            Assert.AreEqual(true, result);
+        }
 
-            // Validar largo
-            if (id.Length == 8 && long.TryParse(id, out tempOut))
-            {
-                var idAsCharArray = id.ToArray();
-                var idAsIntArray = idAsCharArray.Select(c => int.Parse(c.ToString())).ToArray();
-                var referenceArray = "2987634".ToArray().Select(c => int.Parse(c.ToString())).ToArray();
-                var inputCheckDigit = idAsIntArray[7];
-
-                // Calcular número verificador
-                int checkSum = 0;
-                for (int i = 0; i < referenceArray.Length; i++)
-                {
-                    checkSum = checkSum + (idAsIntArray[i] * referenceArray[i]);
-                }
-
-                int checkDigit = 10 - (checkSum % 10);
-
-                if (checkDigit == 10)
-                {
-                    checkDigit = 0;
-                }
-
-                if (checkDigit != inputCheckDigit)
-                {
-                    /// Número verificador ingresado inválido
-                    return false;
-                }
-            }
-            else
-            {
-                // Formato de cédula de identidad inválido
-                return false;
-            }
-
-            return true;
+        public void Test_Isvalid_Exceso()
+        {
+            bool result = IdUtils.IdIsValid("1.234.567-80");
+            Assert.AreEqual(false, result);
+        }
+        public void Test_Isvalid_Falta()
+        {
+            bool result = IdUtils.IdIsValid("1.234.567-");
+            Assert.AreEqual(false, result);
+        }
+        public void Test_Isvalid_Vacio()
+        {
+            bool result = IdUtils.IdIsValid("");
+            Assert.AreEqual(false, result);
+        }
+        public void Test_Isvalid_Null()
+        {
+            bool result = IdUtils.IdIsValid(null);
+            Assert.AreEqual(false, result);
+        }
+        public void Test_Persona()
+        {
+            Person result = new Person("John Doe", "1.234.567-8");
+            Assert.AreEqual(persona, result);
+        }
+        public void Test_Persona_Nombre_Vacio()
+        {
+            Person result = new Person("", "1.234.567-8");
+            Assert.AreEqual(persona_nombre_vacio, result);
+        }
+        public void Test_Persona_Cedula_Vacio()
+        {
+            Person result = new Person("John Doe", "");
+            Assert.AreEqual(persona_cedula_vacio, result);
+        }
+        public void Test_Persona_Vacio()
+        {
+            Person result = new Person("", "");
+            Assert.AreEqual(persona_vacio, result);
+        }
+        public void Test_Persona_Nombre_Null()
+        {
+            Person result = new Person(null, "1.234.567-8");
+            Assert.AreEqual(persona_nombre_null, result);
+        }
+        public void Test_Persona_Cedula_Null()
+        {
+            Person result = new Person("John Doe", null);
+            Assert.AreEqual(persona_cedula_null, result);
+        }
+        public void Test_Persona_Null()
+        {
+            Person result = new Person(null, null);
+            Assert.AreEqual(persona_null, result);
         }
     }
 }
